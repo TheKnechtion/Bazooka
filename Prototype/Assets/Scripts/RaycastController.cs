@@ -49,8 +49,10 @@ public class RaycastController : MonoBehaviour
         mousePos.y -= centerScreen.y;
 
 
+        playerPosition = gameObject.transform.position;
+
         //set line renderer position to current player location
-        lineRenderer.SetPosition(0, new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z));
+        lineRenderer.SetPosition(0, playerPosition);
 
 
         //sets the player look direction based on the player origin and the mouse cursor location
@@ -78,6 +80,7 @@ public class RaycastController : MonoBehaviour
         {
             //set line renderer end to normalized player look direction
             lineRenderer.SetPosition(1, playerLookDirection);
+            lineRenderer.SetPosition(2, playerPosition);
         }
 
     }
