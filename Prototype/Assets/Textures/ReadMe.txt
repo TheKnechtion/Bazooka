@@ -1,0 +1,1 @@
+ComputerChipTexture - https://www.aa.com.tr/en/science-technology/it-expert-issues-warning-on-computer-brain-chips/1970964
