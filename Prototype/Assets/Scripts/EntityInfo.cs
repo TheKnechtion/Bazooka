@@ -7,9 +7,9 @@ public class EntityInfo : MonoBehaviour
 
     public int health = 2;
 
-    private void OnCollisionEnter(Collision collision)
+    private void Update()
     {
-        if (health == 0) { Destroy(gameObject); }
+        if (health <= 0) { Destroy(gameObject); }
     }
 
     //public int CurrentHP { get; set; }

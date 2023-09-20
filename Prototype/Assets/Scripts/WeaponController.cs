@@ -15,6 +15,7 @@ public class WeaponController : MonoBehaviour
 
     Object projectilePrefab;
 
+    Object cloneCheck;
     //Utility for finding appropriate weapon data based on passed in string
     public WeaponInfo MakeWeapon(string weaponName)
     {
@@ -30,46 +31,18 @@ public class WeaponController : MonoBehaviour
 
     public void Shoot(WeaponInfo weapon, Vector3 currentPosition, Vector3 lookDirection)
     {
-        projectilePrefab = Instantiate(Resources.Load(weapon.projectileType.ToString()), currentPosition, new Quaternion(0,0,0,0));
-        
-        
+        projectilePrefab = Resources.Load(weapon.projectileType.ToString());
+
         /*
-        //this is the direction of the ray that's sent out when the player clicks the mouse
-        rayDirection = lookDirection - currentPosition;
-        if (Physics.Raycast(gameObject.transform.position, rayDirection.normalized, out raycast, Mathf.Infinity))
+        if (cloneCheck != null)
         {
-
-
-            //set line renderer end to raycast hit point
-            lineRenderer.SetPosition(1, raycast.point);
-
-            reflectionRay = rayDirection.normalized - 2 * Vector3.Dot(rayDirection.normalized, raycast.normal) * raycast.normal;
-
-
-
-            lineRenderer.SetPosition(2, raycast.point + (reflectionRay * 3));
-
-
-            //Physics.Raycast(raycast.point, )
-
-
-        }
-        else
-        {
-            //set line renderer end to normalized player look direction
-            lineRenderer.SetPosition(1, playerLookDirection);
-            lineRenderer.SetPosition(2, playerPosition);
+            return;
         }
         */
 
+        cloneCheck = Instantiate(projectilePrefab, PlayerInfo.instance.playerPosition, new Quaternion(0, 0, 0, 0));
     }
 
-
-    //Instantiate();
-
-    //instantiate bullet prefab
-
-    //destroy the instanitated bullet after the time has expired
 
 }
 

@@ -23,8 +23,8 @@ public class Projectile : MonoBehaviour
     Vector2 collisionNormal;
     Vector2 direction2D;
 
-    PlayerInfo currentPlayerInfo = new PlayerInfo();
-    WeaponInfo currentWeaponInfo = new WeaponInfo();
+    PlayerInfo currentPlayerInfo;
+    WeaponInfo currentWeaponInfo;
 
     private void Awake()
     {
