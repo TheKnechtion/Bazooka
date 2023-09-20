@@ -10,6 +10,16 @@ public class PlayerMovement : MonoBehaviour
     PlayerController _playerController;
     public float speed = 0.1f;
 
+    bool dash = false;
+
+    float dashCooldown;
+
+    Time time = new Time();
+
+    PlayerInfo playerInfo = new PlayerInfo();
+
+
+
     private void Awake()
     {
         _playerController = new PlayerController();
@@ -18,22 +28,60 @@ public class PlayerMovement : MonoBehaviour
 
 
 
+    private void Start()
+    {
+        dashCooldown = 0;
+    }
+
+
+
+    private void Update()
+    {
+        playerInfo = gameObject.GetComponent<PlayerInfo>();
+        speed = playerInfo.movementSpeed;
+
+        //stores the player's WASD input as a vector2, with AD as the x-axis and WS as the y-axis
+        moveInput = _playerController.PlayerMovement.Movement.ReadValue<Vector2>();
+
+
+        dashCooldown = (dashCooldown > 0) ? dashCooldown-=Time.deltaTime:dashCooldown;
+
+        dash = _playerController.PlayerMovement.Dash.IsPressed();
+    }
+
+
+
+
     // Update is called once per frame
     void FixedUpdate()
     {
-        moveInput = _playerController.PlayerMovement.Movement.ReadValue<Vector2>();
-        //Debug.Log(moveInput);
+
+        if (dash &&  dashCooldown<=0)
+        {
+            //moves the game object this script is attached to based on WASD input
+            transform.Translate(new Vector3(moveInput.x, 0, moveInput.y) * 10f);
+
+            dashCooldown = playerInfo.dashCooldown;
+        }
+        
+
+        //moves the game object this script is attached to based on WASD input 
         transform.Translate(new Vector3(moveInput.x, 0, moveInput.y) * speed);
     }
 
 
+
+
     private void OnEnable()
     {
+        //begins player movement functions
         _playerController.PlayerMovement.Enable();
     }
 
+
     private void OnDisable()
     {
+        //ends player movement functions
         _playerController.PlayerMovement.Disable();
     }
 

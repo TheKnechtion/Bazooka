@@ -65,16 +65,36 @@ public class RaycastController : MonoBehaviour
     //Updates after update, used for physics related calculations and functions
     private void FixedUpdate()
     {
+        //this is the direction of the ray that's sent out when the player clicks the mouse
         rayDirection = playerLookDirection - gameObject.transform.position;
         if (Physics.Raycast(gameObject.transform.position, rayDirection.normalized, out raycast, Mathf.Infinity))
         {
-            Debug.Log(raycast.point);
+
+            /*Possible laser weapon option
+            string tag = raycast.transform.gameObject.tag;
+
+            if(tag == "Enemy")
+            {
+                Destroy(raycast.transform.gameObject);
+            }
+            */
+
+
+
 
             //set line renderer end to raycast hit point
             lineRenderer.SetPosition(1, raycast.point);
 
             reflectionRay = rayDirection.normalized - 2 * Vector3.Dot(rayDirection.normalized, raycast.normal) * raycast.normal;
-            lineRenderer.SetPosition(2, raycast.point+reflectionRay);
+            
+
+
+            lineRenderer.SetPosition(2, raycast.point+(reflectionRay*3));
+
+
+            //Physics.Raycast(raycast.point, )
+
+
         }
         else
         {
