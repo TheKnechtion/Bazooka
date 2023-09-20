@@ -13,6 +13,8 @@ public class WeaponController : MonoBehaviour
     Vector3 rayDirection;
     Vector3 reflectionRay;
 
+    Object projectilePrefab;
+
     //Utility for finding appropriate weapon data based on passed in string
     public WeaponInfo MakeWeapon(string weaponName)
     {
@@ -28,10 +30,9 @@ public class WeaponController : MonoBehaviour
 
     public void Shoot(WeaponInfo weapon, Vector3 currentPosition, Vector3 lookDirection)
     {
-        Debug.Log(weapon.projectileType.ToString());
-        Instantiate(Resources.Load(weapon.projectileType.ToString()), currentPosition, new Quaternion(0,0,0,0));
+        projectilePrefab = Instantiate(Resources.Load(weapon.projectileType.ToString()), currentPosition, new Quaternion(0,0,0,0));
         
-
+        
         /*
         //this is the direction of the ray that's sent out when the player clicks the mouse
         rayDirection = lookDirection - currentPosition;

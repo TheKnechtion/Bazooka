@@ -85,7 +85,7 @@ public class RaycastController : MonoBehaviour
             //set line renderer end to raycast hit point
             lineRenderer.SetPosition(1, raycast.point);
 
-            reflectionRay = rayDirection.normalized - 2 * Vector3.Dot(rayDirection.normalized, raycast.normal) * raycast.normal;
+            reflectionRay = (rayDirection.normalized - 2 * Vector3.Dot(rayDirection.normalized, raycast.normal) * raycast.normal).normalized;
             
 
 

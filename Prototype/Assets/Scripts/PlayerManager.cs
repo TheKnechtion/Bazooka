@@ -28,8 +28,6 @@ public class PlayerManager : MonoBehaviour
 
     float timeBetweenShots = 0.0f;
 
-    PlayerInfo playerInfo = new PlayerInfo();
-
     WeaponInfo tempWeaponInfo = new WeaponInfo();
 
     private void Start()
@@ -41,7 +39,6 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        playerInfo = gameObject.GetComponent<PlayerInfo>();
         playerPosition = gameObject.transform.position;
         
         
@@ -60,11 +57,10 @@ public class PlayerManager : MonoBehaviour
 
         if (_playerController.PlayerActions.Shoot.IsPressed() && timeBetweenShots <= 0.0f)
         {
-            tempWeaponInfo = playerInfo.ownedWeapons[0];
-            
-            Debug.Log(tempWeaponInfo.weaponName);
+            tempWeaponInfo = PlayerInfo.instance.currentWeapon;
 
             weaponController.Shoot(tempWeaponInfo, playerPosition, playerLookDirection);
+
             timeBetweenShots = tempWeaponInfo.timeBetweenProjectileFire;
         }
 

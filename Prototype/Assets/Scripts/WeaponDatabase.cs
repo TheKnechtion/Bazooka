@@ -4,6 +4,17 @@ using System.Collections.Generic;
 public class WeaponDatabase
 {
 
+    //implement singleton functionality in the weapon database
+    /*
+    static WeaponDatabase _instance;
+    public static WeaponDatabase instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
+    */
     public WeaponDatabase()
     {
         Weapon_Database = new List<WeaponInfo>();
@@ -21,11 +32,11 @@ public class WeaponDatabase
         testWeapon.splashDamage = 1;
         testWeapon.maxProjectilesOnScreen = 3;
         testWeapon.numberOfProjectilesPerShot = 1;
-        testWeapon.numberOfBounces = 1;
+        testWeapon.numberOfBounces = 50;
         testWeapon.currentAmmo = 12;
         testWeapon.maxAmmo = 12;
         
-        testWeapon.projectileSpeed = 0.8f;
+        testWeapon.projectileSpeed = 0.2f;
         testWeapon.radiusOfProjectile = 1.0f;
         testWeapon.splashDamageRadius = 1.0f;
         testWeapon.timeBetweenProjectileFire = 1.0f;
