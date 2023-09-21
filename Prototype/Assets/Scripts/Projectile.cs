@@ -56,16 +56,20 @@ public class Projectile : MonoBehaviour
     {
         if (collision.gameObject.tag == "BounceSurface" && numberOfBounces != 0)
         {
-            collisionNormal = new Vector2(collision.contacts[0].normal.x, collision.contacts[0].normal.z);
+            collisionNormal = new Vector2(collision.contacts[0].normal.x, collision.contacts[0].normal.z).normalized;
 
-            direction2D = new Vector2(direction.x, direction.z);
+            direction2D = (new Vector2(direction.x, direction.z));
 
-            direction2D = (direction2D.normalized - 2 * (Vector2.Dot(direction2D.normalized, collisionNormal)) * collisionNormal).normalized;
+            direction2D = (direction2D - 2 * (Vector2.Dot(direction2D, collisionNormal)) * collisionNormal);
 
             direction = new Vector3(direction2D.x, 0, direction2D.y);
             numberOfBounces--;
         }
-        if (collision.gameObject.tag == "Enemy")
+        if (numberOfBounces <= 0)
+        {
+            Destroy(gameObject);
+        }
+            if (collision.gameObject.tag == "Enemy")
         {
             collision.gameObject.GetComponent<EntityInfo>().health -= damage;
             Destroy(gameObject);

@@ -28,6 +28,13 @@ public class RaycastController : MonoBehaviour
     Vector3 rayDirection;
     Vector3 reflectionRay;
 
+    Vector2 raycastNormal2D;
+    Vector2 direction2D;
+
+    PlayerInfo currentPlayerInfo;
+
+    public LayerMask ignoreProjectileLayerObjects;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,59 +47,45 @@ public class RaycastController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //current x,y vector of how far away the cursor is from the bottom left of the screen
-        mousePos = Input.mousePosition;
+        currentPlayerInfo = PlayerInfo.instance;
 
 
-        //translate the mouse coordinates to be based around the center of the screen
-        mousePos.x -= centerScreen.x;
-        mousePos.y -= centerScreen.y;
+        playerPosition = currentPlayerInfo.playerPosition;
 
-
-        playerPosition = gameObject.transform.position;
 
         //set line renderer position to current player location
         lineRenderer.SetPosition(0, playerPosition);
 
 
         //sets the player look direction based on the player origin and the mouse cursor location
-        playerLookDirection = new Vector3(gameObject.transform.position.x + mousePos.x, gameObject.transform.position.y, gameObject.transform.position.z + mousePos.y);
-
-
+        playerLookDirection = currentPlayerInfo.playerLookDirection.normalized;
 
     }
 
     //Updates after update, used for physics related calculations and functions
     private void FixedUpdate()
     {
-        //this is the direction of the ray that's sent out when the player clicks the mouse
-        rayDirection = playerLookDirection - gameObject.transform.position;
-        if (Physics.Raycast(gameObject.transform.position, rayDirection.normalized, out raycast, Mathf.Infinity))
+        
+        
+        if (Physics.Raycast(playerPosition, playerLookDirection, out raycast, Mathf.Infinity, ~ignoreProjectileLayerObjects))
         {
-
-            /*Possible laser weapon option
-            string tag = raycast.transform.gameObject.tag;
-
-            if(tag == "Enemy")
-            {
-                Destroy(raycast.transform.gameObject);
-            }
-            */
-
+            raycastNormal2D = new Vector2(raycast.normal.x, raycast.normal.z).normalized;
 
 
 
             //set line renderer end to raycast hit point
             lineRenderer.SetPosition(1, raycast.point);
 
-            reflectionRay = (rayDirection.normalized - 2 * Vector3.Dot(rayDirection.normalized, raycast.normal) * raycast.normal).normalized;
+            direction2D = new Vector2(playerLookDirection.x, playerLookDirection.z);
+
+            direction2D = direction2D - (2 * Vector2.Dot(direction2D, raycastNormal2D) * raycastNormal2D);
+
+            reflectionRay = new Vector3(direction2D.x, 0, direction2D.y);
             
 
 
             lineRenderer.SetPosition(2, raycast.point+(reflectionRay*3));
 
-
-            //Physics.Raycast(raycast.point, )
 
 
         }

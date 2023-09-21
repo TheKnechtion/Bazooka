@@ -29,7 +29,7 @@ public class WeaponController : MonoBehaviour
     }
 
 
-    public void Shoot(WeaponInfo weapon, Vector3 currentPosition, Vector3 lookDirection)
+    public void Shoot(WeaponInfo weapon)
     {
         projectilePrefab = Resources.Load(weapon.projectileType.ToString());
 

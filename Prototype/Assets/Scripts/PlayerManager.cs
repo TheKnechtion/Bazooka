@@ -61,7 +61,7 @@ public class PlayerManager : MonoBehaviour
 
             tempWeaponInfo = PlayerInfo.instance.currentWeapon;
 
-            weaponController.Shoot(tempWeaponInfo, playerPosition, playerLookDirection);
+            weaponController.Shoot(tempWeaponInfo);
         }
 
         timeBetweenShots = (timeBetweenShots > 0) ? timeBetweenShots-=Time.deltaTime:0;

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4229507388611887063}
   - component: {fileID: -9130516178419059961}
   - component: {fileID: -7167879821045284373}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,6 +123,7 @@ MonoBehaviour:
   numberOfBounces: 0
   speed: 1
   despawnTime: 5
+  damage: 1
   projectileType: 0
   projectilePath: 0
 --- !u!54 &-7167879821045284373
