@@ -32,15 +32,15 @@ public class WeaponDatabase
         testWeapon.splashDamage = 1;
         testWeapon.maxProjectilesOnScreen = 3;
         testWeapon.numberOfProjectilesPerShot = 3;
-        testWeapon.numberOfBounces = 50;
+        testWeapon.numberOfBounces = 2;
         testWeapon.currentAmmo = 12;
         testWeapon.maxAmmo = 12;
         
-        testWeapon.projectileSpeed = 2.3f;
+        testWeapon.projectileSpeed = 0.4f;
         testWeapon.radiusOfProjectile = 1.0f;
         testWeapon.splashDamageRadius = 1.0f;
         testWeapon.timeBetweenProjectileFire = 0.3f;
-        testWeapon.timeBeforeDespawn = 15.0f;
+        testWeapon.timeBeforeDespawn = 5.0f;
         testWeapon.homingStrength = 0.0f;
 
         Weapon_Database.Add(testWeapon);

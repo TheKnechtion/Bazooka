@@ -54,7 +54,13 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "BounceSurface" && numberOfBounces != 0)
+        if (collision.gameObject.tag == "Enemy")
+        {
+            collision.gameObject.GetComponent<EntityInfo>().health -= damage;
+            Destroy(gameObject);
+        }
+
+        if (collision.gameObject.tag == "BounceSurface" && numberOfBounces > 0)
         {
             collisionNormal = new Vector2(collision.contacts[0].normal.x, collision.contacts[0].normal.z).normalized;
 
@@ -65,15 +71,11 @@ public class Projectile : MonoBehaviour
             direction = new Vector3(direction2D.x, 0, direction2D.y);
             numberOfBounces--;
         }
-        if (numberOfBounces <= 0)
-        {
-            Destroy(gameObject);
-        }
-            if (collision.gameObject.tag == "Enemy")
-        {
-            collision.gameObject.GetComponent<EntityInfo>().health -= damage;
-            Destroy(gameObject);
-        }
+
+        if (numberOfBounces < 0) { Destroy(gameObject); }
+  
+        
+        
     }
 
     
