@@ -5,52 +5,63 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public bool doesBounce = false;
-    public int numberOfBounces = 0;
 
-    public float speed = 1.0f;
-    public float despawnTime = 5.0f;
-
-    public int damage = 1;
 
     public ProjectileType projectileType;
     public ProjectilePath projectilePath;
 
-    Vector3 direction;
-
-
-    float magnitude;
 
     Vector2 collisionNormal;
     Vector2 direction2D;
 
-    PlayerInfo currentPlayerInfo;
-    WeaponInfo currentWeaponInfo;
+    public PlayerInfo currentPlayerInfo;
+    WeaponInfo weapon;
 
-    private void Awake()
+
+    Vector3 direction;
+
+    int damage;
+    float despawnTime;
+    float magnitude;
+    int numberOfBounces;
+
+
+
+    private void Start()
     {
-        currentPlayerInfo = PlayerInfo.instance;
+        weapon = currentPlayerInfo.currentWeapon;
+
+        damage = weapon.damage;
+
+        numberOfBounces = weapon.numberOfBounces;
+
+        magnitude = weapon.projectileSpeed;
+
         direction = currentPlayerInfo.playerLookDirection.normalized;
-        currentWeaponInfo = currentPlayerInfo.currentWeapon;
-        damage = currentWeaponInfo.damage;
-        numberOfBounces = currentWeaponInfo.numberOfBounces;
-        magnitude = currentWeaponInfo.projectileSpeed;
+
+        despawnTime = weapon.timeBeforeDespawn;
+
     }
+
 
     // Update is called once per frame
     void Update()
     {
-        Destroy(gameObject, currentPlayerInfo.currentWeapon.timeBeforeDespawn);
+        Destroy(gameObject, despawnTime);
     }
+
 
     private void FixedUpdate()
     {
         gameObject.transform.Translate(direction * magnitude);
     }
 
+
     private void OnDestroy()
     {
         //deal splash damage in splash damage radius
     }
+
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -72,10 +83,8 @@ public class Projectile : MonoBehaviour
             numberOfBounces--;
         }
 
-        if (numberOfBounces < 0) { Destroy(gameObject); }
+        if (numberOfBounces <= 0) { Destroy(gameObject); }
   
-        
-        
     }
 
     

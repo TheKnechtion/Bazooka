@@ -86,6 +86,8 @@ public class RaycastController : MonoBehaviour
 
             lineRenderer.SetPosition(2, raycast.point+(reflectionRay*3));
 
+            
+
 
 
         }
