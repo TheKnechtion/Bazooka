@@ -25,7 +25,6 @@ public class PlayerManager : MonoBehaviour
 
 
 
-
     float timeBetweenShots = 0.0f;
 
     WeaponInfo tempWeaponInfo = new WeaponInfo();
@@ -40,8 +39,8 @@ public class PlayerManager : MonoBehaviour
     private void Update()
     {
         playerPosition = gameObject.transform.position;
-        
-        
+
+
         //current x,y vector of how far away the cursor is from the bottom left of the screen
         mousePos = Input.mousePosition;
 
@@ -53,21 +52,25 @@ public class PlayerManager : MonoBehaviour
         //sets the player look direction based on the player origin and the mouse cursor location
         playerLookDirection = new Vector3(playerPosition.x + mousePos.x, playerPosition.y, playerPosition.z + mousePos.y);
 
+        HandleShooting();
 
+        timeBetweenShots = (timeBetweenShots > 0) ? timeBetweenShots -= Time.deltaTime : 0;
+    }
 
+    private void HandleShooting()
+    {
+        
         if (_playerController.PlayerActions.Shoot.IsPressed() && timeBetweenShots <= 0.0f)
         {
+            
+            Debug.Log("Shooting Count ");
             timeBetweenShots = tempWeaponInfo.timeBetweenProjectileFire;
 
             tempWeaponInfo = PlayerInfo.instance.currentWeapon;
 
             weaponController.Shoot(PlayerInfo.instance);
         }
-
-        timeBetweenShots = (timeBetweenShots > 0) ? timeBetweenShots-=Time.deltaTime:0;
     }
-
-
 
     private void Awake()
     {

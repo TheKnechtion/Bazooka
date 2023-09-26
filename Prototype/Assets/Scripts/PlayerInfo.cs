@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInfo:MonoBehaviour
+public class PlayerInfo:MonoBehaviour, IDamagable
 {
 
     //example of a singleton pattern
@@ -80,7 +80,8 @@ public class PlayerInfo:MonoBehaviour
         _instance = this;
     }
 
-
-
-
+    public void TakeDamage(int passedDamage)
+    {
+        currentHP -= passedDamage;
+    }
 }

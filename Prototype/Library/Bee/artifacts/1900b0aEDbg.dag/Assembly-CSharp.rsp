@@ -369,6 +369,7 @@
 "Assets/Scripts/EnemyInfo.cs"
 "Assets/Scripts/EntityInfo.cs"
 "Assets/Scripts/GameInfo.cs"
+"Assets/Scripts/IDamagable.cs"
 "Assets/Scripts/Item.cs"
 "Assets/Scripts/PlayerController.cs"
 "Assets/Scripts/PlayerInfo.cs"

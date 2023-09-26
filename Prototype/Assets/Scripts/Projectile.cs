@@ -25,15 +25,27 @@ public class Projectile : MonoBehaviour
     float magnitude;
     int numberOfBounces;
 
+    float splashRadius;
+    int splashDamage;
 
+    CapsuleCollider caster;
+    SphereCollider thisProjectileCollider;
 
     private void Start()
     {
+        //caster = GetComponent<CapsuleCollider>();
+        //thisProjectileCollider = GetComponent<SphereCollider>();
+        //Physics.IgnoreCollision(thisProjectileCollider, caster);
+
+        splashDamage = 1;
+        splashRadius = 1;
+
         weapon = currentPlayerInfo.currentWeapon;
 
         damage = weapon.damage;
 
         numberOfBounces = weapon.numberOfBounces;
+
 
         magnitude = weapon.projectileSpeed;
 
@@ -57,17 +69,11 @@ public class Projectile : MonoBehaviour
     }
 
 
-    private void OnDestroy()
-    {
-        //deal splash damage in splash damage radius
-    }
-
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            collision.gameObject.GetComponent<EntityInfo>().health -= damage;
+            collision.gameObject.GetComponent<EntityInfo>().TakeDamage(damage);
             Destroy(gameObject);
         }
 
@@ -81,6 +87,15 @@ public class Projectile : MonoBehaviour
 
             direction = new Vector3(direction2D.x, 0, direction2D.y);
             numberOfBounces--;
+
+            if (numberOfBounces <= 0)
+            {
+                //If the bullet hits a wall and can't bounce anymore, then we want to do splash damage;
+
+                //IF the splash radius is > 0 then this method will damage, 
+                //else nothing will get hit from the 0 radius
+                DealSplashDamage();
+            }
         }
 
         if (numberOfBounces <= 0) { Destroy(gameObject); }
@@ -95,7 +110,26 @@ public class Projectile : MonoBehaviour
 
     private void DealSplashDamage()
     {
+       
+        var collidersHit = Physics.OverlapSphere(gameObject.transform.position, splashRadius);
+        for (int i = 0; i < collidersHit.Length; i++)
+        {
+            collidersHit[i].gameObject.TryGetComponent<EntityInfo>(out EntityInfo en);
+            if (en != null)
+            {
+                Debug.Log("SPLASH DMG");
+                //We deal splash damage if what we hit is not null
+                en.TakeDamage(splashDamage);
+            }
+            
+        }
+    }
 
+    private void OnDrawGizmos()
+    {
+        //Draws splash damage radius
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(gameObject.transform.position, splashRadius);
     }
 
 }

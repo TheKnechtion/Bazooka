@@ -32,7 +32,7 @@ public class WeaponDatabase
         testWeapon.splashDamage = 1;
         testWeapon.maxProjectilesOnScreen = 3;
         testWeapon.numberOfProjectilesPerShot = 3;
-        testWeapon.numberOfBounces = 2;
+        testWeapon.numberOfBounces = 1;
         testWeapon.currentAmmo = 12;
         testWeapon.maxAmmo = 12;
 

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class EntityInfo : MonoBehaviour
+public class EntityInfo : MonoBehaviour, IDamagable
 {
     public string Name { get; set; }
 
@@ -12,6 +12,11 @@ public class EntityInfo : MonoBehaviour
         if (health <= 0) { Destroy(gameObject); }
     }
 
+    public void TakeDamage(int passedDamage)
+    {
+        health -= passedDamage;
+    }
+
     //public int CurrentHP { get; set; }
 
     //public int MaxHP { get; set; }
@@ -20,5 +25,9 @@ public class EntityInfo : MonoBehaviour
 
     //List<WeaponInfo> OwnedWeapons { get; set; }
 
+    private void OnDestroy()
+    {
+
+    }
 
 }
