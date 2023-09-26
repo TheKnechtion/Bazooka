@@ -62,8 +62,6 @@ public class PlayerManager : MonoBehaviour
         
         if (_playerController.PlayerActions.Shoot.IsPressed() && timeBetweenShots <= 0.0f)
         {
-            
-            Debug.Log("Shooting Count ");
             timeBetweenShots = tempWeaponInfo.timeBetweenProjectileFire;
 
             tempWeaponInfo = PlayerInfo.instance.currentWeapon;
