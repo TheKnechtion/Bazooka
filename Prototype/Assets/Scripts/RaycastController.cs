@@ -23,10 +23,12 @@ public class RaycastController : MonoBehaviour
     Vector3 playerLookDirection;
 
 
+    float distanceFromRaycastCollision;
+
     //store hit location of raycast
     RaycastHit raycast;
     Vector3 rayDirection;
-    Vector3 reflectionRay;
+    Vector3 reflectionRayDirection;
 
     Vector2 raycastNormal2D;
     Vector2 direction2D;
@@ -40,6 +42,8 @@ public class RaycastController : MonoBehaviour
     {
         //get the position of the center of the screen
         centerScreen = new Vector2(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2);
+
+        currentPlayerInfo = PlayerInfo.instance;
     }
 
 
@@ -47,8 +51,15 @@ public class RaycastController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentPlayerInfo = PlayerInfo.instance;
 
+
+    }
+
+    //Updates after update, used for physics related calculations and functions
+    private void FixedUpdate()
+    {
+        //sets the player look direction based on the player origin and the mouse cursor location
+        playerLookDirection = currentPlayerInfo.playerLookDirection;
 
         playerPosition = currentPlayerInfo.playerPosition;
 
@@ -57,17 +68,8 @@ public class RaycastController : MonoBehaviour
         lineRenderer.SetPosition(0, playerPosition);
 
 
-        //sets the player look direction based on the player origin and the mouse cursor location
-        playerLookDirection = currentPlayerInfo.playerLookDirection.normalized;
 
-    }
-
-    //Updates after update, used for physics related calculations and functions
-    private void FixedUpdate()
-    {
-        
-        
-        if (Physics.Raycast(playerPosition, playerLookDirection, out raycast, Mathf.Infinity, ~ignoreProjectileLayerObjects))
+        if (Physics.Raycast(playerPosition, playerLookDirection, out raycast, 5.0f, ~ignoreProjectileLayerObjects))
         {
             raycastNormal2D = new Vector2(raycast.normal.x, raycast.normal.z).normalized;
 
@@ -80,11 +82,11 @@ public class RaycastController : MonoBehaviour
 
             direction2D = direction2D - (2 * Vector2.Dot(direction2D, raycastNormal2D) * raycastNormal2D);
 
-            reflectionRay = new Vector3(direction2D.x, 0, direction2D.y);
-            
+            reflectionRayDirection = new Vector3(direction2D.x, 0, direction2D.y);
 
+            distanceFromRaycastCollision = Vector3.Distance(playerPosition, raycast.point);
 
-            lineRenderer.SetPosition(2, raycast.point+(reflectionRay*3));
+            lineRenderer.SetPosition(2, raycast.point + (reflectionRayDirection * (5.0f - distanceFromRaycastCollision)));
 
 
 
@@ -92,7 +94,8 @@ public class RaycastController : MonoBehaviour
         else
         {
             //set line renderer end to normalized player look direction
-            lineRenderer.SetPosition(1, playerLookDirection);
+            lineRenderer.SetPosition(1, (playerLookDirection * 5.0f) +playerPosition);
+
             lineRenderer.SetPosition(2, playerPosition);
         }
 

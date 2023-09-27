@@ -55,16 +55,16 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-
+        //dash
         if (dash &&  dashCooldown<=0)
         {
             //moves the game object this script is attached to based on WASD input
-            transform.Translate(new Vector3(moveInput.x, 0, moveInput.y) * 10f);
+            transform.Translate(new Vector3(moveInput.x, 0, moveInput.y) * 5.0f);
 
             dashCooldown = playerInfo.dashCooldown;
         }
         
-
+        //basic player movement
         //moves the game object this script is attached to based on WASD input 
         transform.Translate(new Vector3(moveInput.x, 0, moveInput.y) * speed);
     }

@@ -9,6 +9,7 @@ TagManager:
   - Weapon
   - Bouncable
   - BounceSurface
+  - Projectile
   layers:
   - Default
   - TransparentFX

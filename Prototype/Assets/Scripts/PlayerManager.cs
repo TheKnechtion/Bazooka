@@ -7,67 +7,67 @@ public class PlayerManager : MonoBehaviour
 
     PlayerController _playerController;
 
-    WeaponController weaponController = new WeaponController();
-
-
+    bool pressed;
 
     //store the current player position
     Vector3 playerPosition;
-
-    //variable that holds value for the x,y center of the screen in pixels
-    Vector2 centerScreen;
-
-    //variable that holds value of location of the mouse cursor
-    Vector3 mousePos;
 
     //stores the player look direction
     Vector3 playerLookDirection;
 
 
 
+    Object projectilePrefab;
+    GameObject currentEntity;
+    WeaponInfo currentWeapon;
+
 
     float timeBetweenShots = 0.0f;
 
-    WeaponInfo tempWeaponInfo = new WeaponInfo();
+    int shotsFired = 0;
+
+    WeaponInfo currentWeaponInfo = new WeaponInfo();
 
     private void Start()
     {
-        //get the position of the center of the screen
-        centerScreen = new Vector2(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2);
-
+        
     }
 
     private void Update()
     {
-        playerPosition = gameObject.transform.position;
-        
-        
-        //current x,y vector of how far away the cursor is from the bottom left of the screen
-        mousePos = Input.mousePosition;
+        playerPosition = PlayerInfo.instance.playerPosition;
 
-
-        //translate the mouse coordinates to be based around the center of the screen
-        mousePos.x -= centerScreen.x;
-        mousePos.y -= centerScreen.y;
+        currentWeapon = PlayerInfo.instance.currentWeapon;
 
         //sets the player look direction based on the player origin and the mouse cursor location
-        playerLookDirection = new Vector3(playerPosition.x + mousePos.x, playerPosition.y, playerPosition.z + mousePos.y);
+        playerLookDirection = PlayerInfo.instance.playerLookDirection;
 
 
+        pressed = _playerController.PlayerActions.Shoot.IsPressed();
 
-        if (_playerController.PlayerActions.Shoot.IsPressed() && timeBetweenShots <= 0.0f)
-        {
-            timeBetweenShots = tempWeaponInfo.timeBetweenProjectileFire;
+        if (pressed) { HandleShooting(); }
 
-            tempWeaponInfo = PlayerInfo.instance.currentWeapon;
+        //tracks time between shots, stopping at 0.
+        timeBetweenShots = (timeBetweenShots > 0) ? timeBetweenShots -= Time.deltaTime : 0;
 
-            weaponController.Shoot(tempWeaponInfo);
-        }
 
-        timeBetweenShots = (timeBetweenShots > 0) ? timeBetweenShots-=Time.deltaTime:0;
     }
 
+    
+    private void HandleShooting()
+    {
+       
+        if (timeBetweenShots <= 0.0f)
+        {
+    
+            Debug.Log("Hello");
 
+            timeBetweenShots = currentWeapon.timeBetweenProjectileFire;
+          
+            Shoot();
+
+        }
+    }
 
     private void Awake()
     {
@@ -88,5 +88,20 @@ public class PlayerManager : MonoBehaviour
         //ends player movement functions
         _playerController.PlayerActions.Disable();
     }
+
+
+    void Shoot()
+    {
+       
+        projectilePrefab = Resources.Load(currentWeapon.projectileType.ToString());
+
+        currentEntity = Instantiate(projectilePrefab as GameObject, playerPosition, new Quaternion(0, 0, 0, 0));
+
+        
+        currentEntity.GetComponent<Projectile>().currentWeaponInfo = currentWeapon;
+
+        currentEntity.GetComponent<Projectile>().direction = playerLookDirection.normalized;
+    }
+
 
 }

@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInfo:MonoBehaviour
+public class PlayerInfo:MonoBehaviour, IDamagable
 {
 
     //example of a singleton pattern
     //concept was learned about from user "ericbegue" on the unity forum
     //https://forum.unity.com/threads/best-way-to-find-player-in-the-scene.391663/
     static PlayerInfo _instance;
+
     public static PlayerInfo instance
     {
         get
@@ -47,6 +48,8 @@ public class PlayerInfo:MonoBehaviour
 
 
 
+
+
     private void Start()
     {
         currentHP = maximumHP;
@@ -72,7 +75,7 @@ public class PlayerInfo:MonoBehaviour
         mousePos.y -= centerScreen.y;
 
         //sets the player look direction based on the player origin and the mouse cursor location
-        playerLookDirection = new Vector3(playerPosition.x + mousePos.x, playerPosition.y, playerPosition.z + mousePos.y);
+        playerLookDirection = new Vector3(playerPosition.x + mousePos.x, playerPosition.y, playerPosition.z + mousePos.y).normalized;
     }
 
     private void Awake()
@@ -80,7 +83,8 @@ public class PlayerInfo:MonoBehaviour
         _instance = this;
     }
 
-
-
-
+    public void TakeDamage(int passedDamage)
+    {
+        currentHP -= passedDamage;
+    }
 }

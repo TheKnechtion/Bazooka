@@ -5,56 +5,103 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public bool doesBounce = false;
-    public int numberOfBounces = 0;
 
-    public float speed = 1.0f;
-    public float despawnTime = 5.0f;
-
-    public int damage = 1;
 
     public ProjectileType projectileType;
     public ProjectilePath projectilePath;
 
-    Vector3 direction;
-
-
-    float magnitude;
 
     Vector2 collisionNormal;
     Vector2 direction2D;
 
-    PlayerInfo currentPlayerInfo;
-    WeaponInfo currentWeaponInfo;
+    public WeaponInfo currentWeaponInfo = null;
+
+
+    public Vector3 direction;
+
+    int damage;
+    float despawnTime;
+    float magnitude;
+    int numberOfBounces;
+
+    float splashRadius;
+    int splashDamage;
+
+    bool exploding = false;
+    bool isSpawning = true;
+
+
+    CapsuleCollider caster;
+    SphereCollider thisProjectileCollider;
+
+    private void Start()
+    {
+        //caster = GetComponent<CapsuleCollider>();
+        //thisProjectileCollider = GetComponent<SphereCollider>();
+        //Physics.IgnoreCollision(thisProjectileCollider, caster);
+
+
+        damage = currentWeaponInfo.damage;
+
+        splashDamage = currentWeaponInfo.splashDamage;
+
+        splashRadius = currentWeaponInfo.splashDamageRadius;
+
+        numberOfBounces = currentWeaponInfo.numberOfBounces;
+
+        magnitude = currentWeaponInfo.projectileSpeed;
+
+        despawnTime = currentWeaponInfo.timeBeforeDespawn;
+
+        Destroy(gameObject, despawnTime);
+    }
 
     private void Awake()
     {
-        currentPlayerInfo = PlayerInfo.instance;
-        direction = currentPlayerInfo.playerLookDirection.normalized;
-        currentWeaponInfo = currentPlayerInfo.currentWeapon;
-        damage = currentWeaponInfo.damage;
-        numberOfBounces = currentWeaponInfo.numberOfBounces;
-        magnitude = currentWeaponInfo.projectileSpeed;
+
     }
+
+
 
     // Update is called once per frame
     void Update()
     {
-        Destroy(gameObject, currentPlayerInfo.currentWeapon.timeBeforeDespawn);
+
+        
     }
+
 
     private void FixedUpdate()
     {
         gameObject.transform.Translate(direction * magnitude);
     }
 
-    private void OnDestroy()
-    {
-        //deal splash damage in splash damage radius
-    }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "BounceSurface" && numberOfBounces != 0)
+        if (collision.gameObject.tag == "Enemy" && !isSpawning)
+        {
+            collision.gameObject.GetComponent<EnemyInfo>().TakeDamage(damage);
+            DealSplashDamage();
+            Destroy(gameObject, 0.03f);
+        }
+
+        
+        if(collision.gameObject.tag == "Player" && !isSpawning)
+        {
+            collision.gameObject.GetComponent<PlayerInfo>().TakeDamage(damage);
+            DealSplashDamage();
+            Destroy(gameObject, 0.03f);
+        
+        }
+        
+        
+        
+        
+        if (numberOfBounces <= 0 || collision.gameObject.tag == "Projectile") { DealSplashDamage(); Destroy(gameObject,0.05f); }
+
+
+        if (collision.gameObject.tag == "BounceSurface" && numberOfBounces > 0)
         {
             collisionNormal = new Vector2(collision.contacts[0].normal.x, collision.contacts[0].normal.z).normalized;
 
@@ -64,19 +111,18 @@ public class Projectile : MonoBehaviour
 
             direction = new Vector3(direction2D.x, 0, direction2D.y);
             numberOfBounces--;
+
         }
-        if (numberOfBounces <= 0)
-        {
-            Destroy(gameObject);
-        }
-            if (collision.gameObject.tag == "Enemy")
-        {
-            collision.gameObject.GetComponent<EntityInfo>().health -= damage;
-            Destroy(gameObject);
-        }
+
+
     }
 
-    
+    private void OnCollisionExit(Collision collision)
+    {
+        isSpawning = false;
+    }
+
+
     private void Bounce()
     {
 
@@ -84,7 +130,35 @@ public class Projectile : MonoBehaviour
 
     private void DealSplashDamage()
     {
+        //checks surrounding area in a sphere
+        var collidersHit = Physics.OverlapSphere(gameObject.transform.position, splashRadius);
+        
+        
+        for (int i = 0; i < collidersHit.Length; i++)
+        {
 
+            collidersHit[i].gameObject.TryGetComponent<EntityInfo>(out EntityInfo entityInfo);
+            if (entityInfo != null)
+            {
+                Debug.Log("SPLASH DMG");
+                //We deal splash damage if what we hit is not null
+                entityInfo.TakeDamage(splashDamage);
+            }
+            
+        }
+
+        exploding = true;
     }
+
+    private void OnDrawGizmos()
+    {
+        if (exploding)
+        {
+            //Draws splash damage radius
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(gameObject.transform.position, splashRadius);
+        }
+    }
+
 
 }
