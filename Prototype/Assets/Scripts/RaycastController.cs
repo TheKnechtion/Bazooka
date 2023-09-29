@@ -7,9 +7,6 @@ public class RaycastController : MonoBehaviour
     //store the lineRenderer on the player
     [SerializeField] LineRenderer lineRenderer;
 
-    //store the player game object
-    [SerializeField] GameObject gameObject;
-
     //store the current player position
     Vector3 playerPosition;
 
@@ -61,7 +58,7 @@ public class RaycastController : MonoBehaviour
         //sets the player look direction based on the player origin and the mouse cursor location
         playerLookDirection = currentPlayerInfo.playerLookDirection;
 
-        playerPosition = currentPlayerInfo.playerPosition;
+        playerPosition = this.gameObject.transform.position;
 
 
         //set line renderer position to current player location

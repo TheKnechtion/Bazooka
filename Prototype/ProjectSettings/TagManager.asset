@@ -10,6 +10,7 @@ TagManager:
   - Bouncable
   - BounceSurface
   - Projectile
+  - DestroyableStructure
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - UI
   - 
   - Projectiles
-  - 
+  - Item
   - 
   - 
   - 

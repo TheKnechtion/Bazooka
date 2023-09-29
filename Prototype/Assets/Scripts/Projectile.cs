@@ -81,7 +81,7 @@ public class Projectile : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy" && !isSpawning)
         {
-            collision.gameObject.GetComponent<EnemyInfo>().TakeDamage(damage);
+            collision.gameObject.GetComponent<EnemyBehavior>().TakeDamage(damage);
             DealSplashDamage();
             Destroy(gameObject, 0.03f);
         }
@@ -94,14 +94,14 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject, 0.03f);
         
         }
-        
-        
+
+        if (collision.gameObject.tag == "DestroyableStructure") { collision.gameObject.GetComponent<Button>().TakeDamage(damage); }
         
         
         if (numberOfBounces <= 0 || collision.gameObject.tag == "Projectile") { DealSplashDamage(); Destroy(gameObject,0.05f); }
 
 
-        if (collision.gameObject.tag == "BounceSurface" && numberOfBounces > 0)
+        if ((collision.gameObject.tag == "BounceSurface" || collision.gameObject.tag == "DestroyableStructure") && numberOfBounces > 0)
         {
             collisionNormal = new Vector2(collision.contacts[0].normal.x, collision.contacts[0].normal.z).normalized;
 
